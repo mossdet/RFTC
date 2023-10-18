@@ -1,0 +1,45 @@
+clc; clear all; close all;
+paths = getFilesPaths();
+preFiles  = getPreFiles();%getAllFiles, getPreFiles, getPostFiles
+postFiles  = getPostFiles();%getAllFiles, getPreFiles, getPostFiles
+
+selDetector = 'MOSSDET'; 'Delphos'; 'MOSSDET'; 'MOSSDET_Depurated';
+feature = 'OccRate'; 'OccRate'; 'Power'; 'Frequency';
+thList = 0:30;
+
+if strcmp(selDetector, 'Delphos')
+    thList = 0;
+end
+
+for th = thList
+    for fileIdx = 1:size(preFiles,1)
+        if th > 0
+            selDetector = 'MOSSDET_Depurated';
+        end
+
+        tablesFilePath = strcat(paths.workspacePath, 'ChannelCharacterizationTables\', selDetector, '\');
+
+        if th == 0
+            tablesFilePath = tablesFilePath;
+        else 
+            tablesFilePath = strcat(tablesFilePath, 'Th', num2str(th), '\');
+        end
+
+        prePatName = preFiles{fileIdx}; prePatName = prePatName(1:length(prePatName)-4);
+        postPatName = postFiles{fileIdx}; postPatName = postPatName(1:length(postPatName)-4);
+
+        preTableFN = strcat(tablesFilePath, prePatName, '_', 'ChannelCharacterization_', selDetector, '.xls');
+        postTableFN = strcat(tablesFilePath, postPatName, '_', 'ChannelCharacterization_', selDetector, '.xls');
+
+        preTable = readtable(preTableFN, 'Sheet', feature);
+        postTable = readtable(postTableFN, 'Sheet', feature);
+
+        patCodeSeparators = strfind(prePatName, '_');
+        patCode = prePatName(patCodeSeparators(2):patCodeSeparators(3));patCode = strrep(patCode, '_', '');
+        outcomeTableFilename = 'F:\ForschungsProjekte\RFTC\MATLAB\DetectHFO\OtherData\Lachner_DetectedFiles_List.xlsx';
+        outcomeTable = readtable(outcomeTableFilename, 'Sheet', 'MicromedFiles(.TRC)');
+        outcomeVal = outcomeTable.Post_RFTCImprovement___(find(ismember(outcomeTable.Code,patCode)));
+
+        p = signrank(preTable.iaVals, postTable.iaVals)
+    end
+end
