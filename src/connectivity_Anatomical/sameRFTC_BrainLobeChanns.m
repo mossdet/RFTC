@@ -84,7 +84,6 @@ end
 
 function chNameCorr = getCorrectChannelNames(chName)
     chNameCorr = strrep(chName, ' ', '');
-    chNameCorr = strrep(chNameCorr, 'p', '''');
     chNameCorr = lower(chNameCorr);
     if not(isempty(chNameCorr))
         if contains(chNameCorr, '-')
@@ -108,5 +107,17 @@ function chNameCorr = getCorrectChannelNumber(chName)
     lastNumIdx = max(foundNrIndices);
     contactNr = str2double(chName(firstNumIdx:lastNumIdx));
     electrodeName = chName(1:firstNumIdx-1);
+    if contains(electrodeName,'p')
+        if length(electrodeName)>1
+            if ~contains(electrodeName, "'")
+                electrodeName = strrep(electrodeName, 'p', '''');
+            else
+                disp(chName)
+            end
+        else
+            disp(chName)
+        end
+    end
+    
     chNameCorr = strcat(electrodeName, num2str(contactNr));
 end

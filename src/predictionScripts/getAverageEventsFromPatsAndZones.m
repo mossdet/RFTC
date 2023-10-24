@@ -2,10 +2,10 @@ clc; clear all; close all;
 
 paths = getFilesPaths();
 workspacePath = paths.workspacePath;
-files  = getAllFiles();%getAllFiles();%getPreFiles, getPostFiles
+files  = getAllFiles(); % getPoster2023Files getAllFiles getAllFiles getPreFiles getPostFiles
 groupTablesPath = strcat(workspacePath, 'CharacterizationTables\GroupCharacterizationTablesMedian\');
 zonesNames = {'rftcSite', 'rftcStructure', 'rftcConnected', 'highEI', 'rftcLobe', 'rftcHemisphere'};
-zonesNames = {'rftcConnected'};
+%zonesNames = {'rftcConnected'};
 
 % Tables to read
 spreadSheetNamePre = strcat(groupTablesPath, 'GroupCharacterization_FlexK_Pre.xls');
@@ -117,13 +117,16 @@ for fileIdx = 1:size(files,1)
                 [M,I] = max(signalBP(hfoStart:hfoEnd));
 
                 centeredHFOStart = hfoStart+I-(fs/2);
-                centeredHFOEnd = hfoStart+I+(fs/2);
+                centeredHFOEnd = centeredHFOStart + fs - 1;
 
                 if centeredHFOStart<1 || centeredHFOEnd>length(signal)
                     continue;
                 end
 
                 hfoSignalCtrd = signalBP(centeredHFOStart:centeredHFOEnd);
+                if fs == 1024
+                    hfoSignalCtrd = interp(hfoSignalCtrd,2);
+                end
                 if isempty(avg_HFO)
                     avg_HFO = hfoSignalCtrd;
                 else
@@ -139,13 +142,16 @@ for fileIdx = 1:size(files,1)
                 [M,I] = max(signalBP(hfoStart:hfoEnd));
 
                 centeredHFOStart = hfoStart+I-(fs/2);
-                centeredHFOEnd = hfoStart+I+(fs/2);
+                centeredHFOEnd = centeredHFOStart + fs - 1;
 
                 if centeredHFOStart<1 || centeredHFOEnd>length(signal)
                     continue;
                 end
 
                 hfoSignalCtrd = signalBP(centeredHFOStart:centeredHFOEnd);
+                if fs == 1024
+                    hfoSignalCtrd = interp(hfoSignalCtrd,2);
+                end
                 if isempty(avg_iesHFO)
                     avg_iesHFO = hfoSignalCtrd;
                 else
@@ -155,14 +161,20 @@ for fileIdx = 1:size(files,1)
             end 
 
         end
+        dur_min = (rftcPatData.nrSamples/rftcPatData.fs)/60;
+        nr_an_channs = length(analysisChannels)
         avg_HFO = avg_HFO/nrIncluded_HFO;
         avg_iesHFO = avg_iesHFO/nrIncluded_iesHFO;
         timeVec = (0:length(avg_HFO)-1)/fs;
         if mod(fileIdx, 2) ~=0
             ylimVec = [min(avg_HFO), max(avg_HFO); min(avg_iesHFO), max(avg_iesHFO)];
-        end  
+        end
+        hfo_occ_rate = (nrIncluded_HFO/nr_an_channs)/dur_min;
+        ieshfo_occ_rate = (nrIncluded_iesHFO/nr_an_channs)/dur_min;
 
-        newEntree = {patName, patOutcome, zoneName, 'HFO', avg_HFO, timeVec; patName, patOutcome, zoneName, 'iesHFO', avg_iesHFO, timeVec};
+        %newEntree = {patName, patOutcome, zoneName, 'HFO', avg_HFO, timeVec; patName, patOutcome, zoneName, 'iesHFO', avg_iesHFO, timeVec, hfo_occ_rate, ieshfo_occ_rate};
+        newEntree = {patName, patOutcome, zoneName, 'HFO', avg_HFO, timeVec, hfo_occ_rate; patName, patOutcome, zoneName, 'iesHFO', avg_iesHFO, timeVec, ieshfo_occ_rate};
+
         allPatAverageEOI = cat(1, allPatAverageEOI, newEntree);
 
         continue;
@@ -236,15 +248,15 @@ for fileIdx = 1:size(files,1)
         set(gcf, 'Position', get(0, 'Screensize'), 'color','w');
         
         posterImagesPath = 'F:\Postdoc_Calgary\Conferences\AES2023\AES_Abstract_2023\Figures\MatlabFigures\';
+        posterImagesPath = "F:\ForschungsProjekte\RFTC\RFTC_HFO_Python\Images\Avg_HFO\";
         images_Path = strcat(posterImagesPath, '\');mkdir(images_Path)
-        imageFilename = strcat(images_Path, patNameFig, '_', zoneName, '.jpg');
+        imageFilename = strcat(images_Path, patNameFig, '_', zoneName, '.fig');
         saveas(gcf, imageFilename);
         
         close();
-
     end
 end
-
+save("F:\ForschungsProjekte\RFTC\RFTC_HFO_Python\Images\Avg_HFO\allPatAverageEOI", 'allPatAverageEOI')
 %%
 
 function hdrFeats = getFeaturesHeader(patName, chName, chi, fs, signal, filteredSignalR, filteredSignalFR, hfoDetections)

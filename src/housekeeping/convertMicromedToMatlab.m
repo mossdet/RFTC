@@ -8,7 +8,7 @@ filesMapPath = paths.filesMapPath;
 startup;
 
 files  = getAllFiles();
-ignoreChannels  = [];%getIgnoreChannels();
+ignoreChannels  = getIgnoreChannels();
 
 allPatsDate = {};
 for fileIdx = 1:size(files,1)
@@ -19,8 +19,8 @@ for fileIdx = 1:size(files,1)
     channelLabels = sort(header.label);
     dateStr = strcat(header.orig.year, " ", header.orig.month, " ", header.orig.day);
     allPatsDate = cat(1, allPatsDate, {subjName, dateStr});
-    
     continue;
+    
     %Delete data from channels to ignore and clean weird symbols from
     %channel names, call the next 7 lines exactly in this order!
     channsList = header.label;

@@ -190,7 +190,7 @@ end
 function outcomeVal = getOutcome(patName)
     patCodeSeparators = strfind(patName, '_');
     patCode = patName(patCodeSeparators(2):patCodeSeparators(3));patCode = strrep(patCode, '_', '');
-    outcomeTableFilename = 'F:\ForschungsProjekte\RFTC\MATLAB_ver2\OtherData\Lachner_DetectedFiles_List.xlsx';
+    outcomeTableFilename = 'F:\ForschungsProjekte\RFTC\RFTC_HFO\OtherData\Lachner_DetectedFiles_List.xlsx';
     outcomeTable = readtable(outcomeTableFilename, 'Sheet', 'MicromedFiles(.TRC)');
     outcomeVal = outcomeTable.Post_RFTCImprovement___(find(ismember(outcomeTable.Code,patCode)));
 end

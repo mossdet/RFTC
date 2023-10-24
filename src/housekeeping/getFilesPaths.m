@@ -15,11 +15,11 @@ function paths = getFilesPaths()
         paths.rftcFlags = 'C:\Users\lachner\Documents\RFTC\Project_Files\RFTC_Channels\Done_Only_RFTC_BipolarMontage_Labeled\';
         paths.anatLocalizationGrenoblePath = 'C:\Users\lachner\Documents\RFTC\Project_Files\ChannelLocalization_JJ\';
     elseif strcmp(computer, 'LAPTOP-TFQFNF6U')
-        paths.workspacePath = 'F:\ForschungsProjekte\RFTC\MATLAB_ver2\';
+        paths.workspacePath = 'F:\ForschungsProjekte\RFTC\RFTC_HFO\';
         paths.eegFilesPath = 'F:\ForschungsProjekte\RFTC\Project_Files\PatientFilesMicromed\AllPatients\';
-        paths.eiFilesPath = 'F:\ForschungsProjekte\RFTC\MATLAB_ver2\OtherData\EI\';
+        paths.eiFilesPath = 'F:\ForschungsProjekte\RFTC\RFTC_HFO\OtherData\EI\';
         paths.filesMapPath= 'F:\ForschungsProjekte\RFTC\Project_Files\PatientLists\GrenobleFilesMap.xlsx';
-        paths.hfoDetectorFolder = 'F:\ForschungsProjekte\RFTC\MATLAB_ver2\MOSSDET_c\';
+        paths.hfoDetectorFolder = 'F:\ForschungsProjekte\RFTC\RFTC_HFO\MOSSDET_c\';
         paths.rftcFlags = 'F:\ForschungsProjekte\RFTC\Project_Files\RFTC_Channels\Done_Only_RFTC_BipolarMontage_Labeled\';
         paths.mniCoordinates = 'F:\ForschungsProjekte\RFTC\Project_Files\ChannelLocalization\';
         paths.anatLocalizationGrenoblePath = 'F:\ForschungsProjekte\RFTC\Project_Files\ChannelLocalization_JJ\';

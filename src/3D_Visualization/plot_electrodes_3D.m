@@ -18,7 +18,8 @@ ignoreChannels  = [];%getIgnoreChannels();
 paths.new_eeg_path = 'F:\ForschungsProjekte\RFTC\RFTC_HFO_Python\Data\';
 
 for fileIdx = 1:size(files,1)
-    filename = strcat(eegFilesPath, files{fileIdx});
+    fileIdx
+    filename = strcat(eegFilesPath, files{fileIdx})
     get_3d_coordinates(paths, filename)
     %convert_file(paths, filename)
 end
@@ -41,8 +42,8 @@ function get_3d_coordinates(paths, filename)
     for li = 1:length(anatLocTableJJ.contact)
         anatLocTableJJ.contact{li} = getCorrectChannelNames(anatLocTableJJ.contact{li});
     end
-    mni_coord_str = anatLocTableJJ.MNI;
-    %mni_coord_str = anatLocTableJJ.T1preScannerBased;
+    %mni_coord_str = anatLocTableJJ.MNI;
+    mni_coord_str = anatLocTableJJ.T1preScannerBased;
     mni_coord_str = strrep(mni_coord_str, '[','');
     mni_coord_str = strrep(mni_coord_str, ']','');
     mni_coord_str = strrep(mni_coord_str, ' ','');
